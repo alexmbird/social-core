@@ -80,14 +80,13 @@ class LinkedinOAuth2(BaseLinkedinAuth, BaseOAuth2):
     ACCESS_TOKEN_METHOD = 'POST'
     REDIRECT_STATE = False
 
+    # AH - backed out change in https://github.com/python-social-auth/social-core/pull/165/
     def user_data(self, access_token, *args, **kwargs):
-        headers = self.user_data_headers() or {}
-        headers['oauth_token'] = access_token
         return self.get_json(
             self.user_details_url(),
-            params={'format': 'json'},
-            headers=headers
-        )
+            params={'oauth2_access_token': access_token,
+                    'format': 'json'},
+            headers=self.user_data_headers()         )
 
     def request_access_token(self, *args, **kwargs):
         # LinkedIn expects a POST request with querystring parameters, despite
