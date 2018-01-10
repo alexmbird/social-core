@@ -43,12 +43,15 @@ def do_complete(backend, login, user=None, redirect_name='next',
 
     is_authenticated = user_is_authenticated(user)
     user = user if is_authenticated else None
+    log.debug("1. user becomes {}".format(user))
 
     partial = partial_pipeline_data(backend, user, *args, **kwargs)
+    log.debug("2. partial is {}".format(partial))
     if partial:
         user = backend.continue_pipeline(partial)
     else:
         user = backend.complete(user=user, *args, **kwargs)
+    log.debug("3. user becomes {}".format(user))
 
     # pop redirect value before the session is trashed on login(), but after
     # the pipeline so that the pipeline can change the redirect if needed
@@ -58,7 +61,9 @@ def do_complete(backend, login, user=None, redirect_name='next',
     # check if the output value is something else than a user and just
     # return it to the client
     user_model = backend.strategy.storage.user.user_model()
+    log.debug("4. user model is {}".format(user_model))
     if user and not isinstance(user, user_model):
+        log.debug("4.1. User was not an instance of user_model; returning unchanged")
         return user
 
     if is_authenticated:
