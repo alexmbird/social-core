@@ -27,8 +27,17 @@ def do_auth(backend, redirect_name='next'):
     return backend.start()
 
 
+# AH - add debug logging
+import logging
+log = logging.getLogger("social")
 def do_complete(backend, login, user=None, redirect_name='next',
                 *args, **kwargs):
+    log.debug("Starting do_complete()")
+    log.debug("backend: {}".format(backend))
+    log.debug("login: {}".format(login))
+    log.debug("user: {}".format(user))
+    log.debug("args: {}".format(args))
+    log.debug("kwargs: {}".format(kwargs))
     data = backend.strategy.request_data()
 
     is_authenticated = user_is_authenticated(user)
