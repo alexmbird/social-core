@@ -67,14 +67,18 @@ def do_complete(backend, login, user=None, redirect_name='next',
         return user
 
     if is_authenticated:
+        log.debug("4.1. User is authenticated")
         if not user:
             url = setting_url(backend, redirect_value, 'LOGIN_REDIRECT_URL')
         else:
             url = setting_url(backend, redirect_value,
                               'NEW_ASSOCIATION_REDIRECT_URL',
                               'LOGIN_REDIRECT_URL')
+            log.debug("4.1.1. url becomes {}".format(url))
     elif user:
+        log.debug("4.1. User wasn't authed")
         if user_is_active(user):
+            log.debug("4.1.1. User is active")
             # catch is_new/social_user in case login() resets the instance
             is_new = getattr(user, 'is_new', False)
             social_user = user.social_user
@@ -92,6 +96,7 @@ def do_complete(backend, login, user=None, redirect_name='next',
                 url = setting_url(backend, redirect_value,
                                   'LOGIN_REDIRECT_URL')
         else:
+            log.debug("4.1.1. User isn't active")
             if backend.setting('INACTIVE_USER_LOGIN', False):
                 social_user = user.social_user
                 login(backend, user, social_user)
