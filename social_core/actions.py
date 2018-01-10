@@ -39,6 +39,7 @@ def do_complete(backend, login, user=None, redirect_name='next',
     log.debug("user: {}".format(user))
     log.debug("args: {}".format(args))
     log.debug("kwargs: {}".format(kwargs))
+    log.debug("backend.strategy: {}".format(backend.strategy))
     data = backend.strategy.request_data()
 
     is_authenticated = user_is_authenticated(user)
@@ -82,6 +83,7 @@ def do_complete(backend, login, user=None, redirect_name='next',
             # catch is_new/social_user in case login() resets the instance
             is_new = getattr(user, 'is_new', False)
             social_user = user.social_user
+            log.debug("4.1.2. about to do login(); social_user is {}".format(social_user))
             login(backend, user, social_user)
             # store last login backend name in session
             backend.strategy.session_set('social_auth_last_login_backend',
@@ -115,6 +117,8 @@ def do_complete(backend, login, user=None, redirect_name='next',
                         [backend.strategy.request_host()]
         url = sanitize_redirect(allowed_hosts, url) or \
               backend.setting('LOGIN_REDIRECT_URL')
+    log.debug("4.2. url became {}".format(url))
+    log.debug("4.3. returning backend.strategy.redirect(url)")
     return backend.strategy.redirect(url)
 
 
