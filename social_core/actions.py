@@ -32,6 +32,7 @@ import logging
 log = logging.getLogger("social")
 def do_complete(backend, login, user=None, redirect_name='next',
                 *args, **kwargs):
+    print("Actually in do_complete()")
     log.debug("Starting do_complete()")
     log.debug("backend: {}".format(backend))
     log.debug("login: {}".format(login))
